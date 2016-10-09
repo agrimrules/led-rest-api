@@ -2,6 +2,7 @@ __author__ = 'agrimasthana'
 from flask import Flask, request, jsonify
 from flaskext.mysql import MySQL
 from flask_api import status
+from os import system
 
 app = Flask(__name__)
 mySql = MySQL()
@@ -25,6 +26,7 @@ def led():
         cursor = conn.cursor()
         cursor.execute("insert into Messages(message) values (%s)", _message)
         conn.commit()
+        system('python ledbadge.py effect=left speed=5 "'+_message+'"')
         cursor.close()
     except conn.IntegrityError:
         return jsonify({'status': 'Failed'}), status.HTTP_500_INTERNAL_SERVER_ERROR
